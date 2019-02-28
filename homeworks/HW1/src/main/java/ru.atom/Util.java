@@ -26,8 +26,8 @@ public class Util {
      */
     public static int max(int[] values) {
         int max = Integer.MIN_VALUE;
-        for( int i: values){
-            if(i>max){
+        for (int i : values) {
+            if (i > max) {
                 max = i;
             }
 
@@ -42,11 +42,11 @@ public class Util {
      * @return the sum of all values.
      */
     public static long sum(int[] values) {
-        long  sum = 0;
-        for( int i: values){
+        long sum = 0;
+        for (int i : values) {
             sum += i;
 
-         }
+        }
         return sum;
     }
 
