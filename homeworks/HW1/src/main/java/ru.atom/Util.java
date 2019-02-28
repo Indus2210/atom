@@ -25,7 +25,14 @@ public class Util {
      * @return the largest of values.
      */
     public static int max(int[] values) {
-        return 0;
+        int max = Integer.MIN_VALUE;
+        for( int i: values){
+            if(i>max){
+                max = i;
+            }
+
+        }
+        return max;
     }
 
     /**
@@ -35,7 +42,12 @@ public class Util {
      * @return the sum of all values.
      */
     public static long sum(int[] values) {
-        return 0;
+        long  sum = 0;
+        for( int i: values){
+            sum += i;
+
+         }
+        return sum;
     }
 
 
