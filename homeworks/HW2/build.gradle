@@ -8,16 +8,17 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
+checkstyle {
+    ignoreFailures = false
+    toolVersion = '7.5'
+    configFile = new File('../../config/checkstyle/checkstyle.xml')
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-checkstyle {
-    ignoreFailures = false
-    toolVersion = '7.5'
-    configFile = new File('../../config/checkstyle/checkstyle.xml')
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.2'
 }
