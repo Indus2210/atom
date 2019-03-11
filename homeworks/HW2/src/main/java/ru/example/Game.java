@@ -15,13 +15,13 @@ public class Game {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Game.class);
 
     public static void main(String[] args) {
-        log.info("Игра запущена");
+        log.info("Game started");
         System.out.println("Привет, ты зашел в игру Быки и Коровы!");
-        StartScrin();
+        start();
 
     }
 
-    private static void StartScrin() {
+    private static void start() {
         System.out.println("Выбери что ты хочешь сделать:");
         System.out.println("1 - Начать игру");
         System.out.println("2 - Правила игры");
@@ -30,34 +30,38 @@ public class Game {
         int num = in.nextInt();
         switch (num) {
             case 1:
-                Game();
+                start_game();
                 break;
             case 2:
-                Rules();
+                rules();
                 break;
             case 3:
-                Exit();
+                exit_game();
                 break;
+            default:
+                exit_game();
         }
 
     }
 
-    private static void Exit() {
-        log.info("Игрок закончил игру");
+    private static void exit_game() {
+        log.info("Player finished game");
         System.out.println("Спасибо, что поиграл!");
         System.exit(0);
 
     }
 
-    private static void Rules() {
-        log.info("Игрок открыл правила");
+    private static void rules() {
+        log.info("The player opened the rules");
         System.out.println("Компьетер задумывает слово и объявляет длину слова заранее.");
-        System.out.println("Участник предлагают свои варианты слов, а компьютер им отвечает в таком виде (допустим):\n 2б1к - это значит (два быка и одна корова), т.е. две буквы угаданы и стоят на своем месте, одна угадана, но стоит не на своем месте.");
+        System.out.println("Участник предлагают свои варианты слов, а компьютер им отвечает в таком виде (допустим):");
+        System.out.println(" 2б1к - это значит (два быка и одна корова), т.е. две буквы угаданы и стоят на своем");
+        System.out.println("месте, одна угадана, но стоит не на своем месте.");
         System.out.println("На угадывание слова дается 5 попыток");
         Scanner in = new Scanner(System.in);
         System.out.println("Для продолжения нажми Enter...");
         in.nextLine();
-        StartScrin();
+        start();
 
     }
 
@@ -106,53 +110,58 @@ public class Game {
         return count;
     }
 
-    private static void Game() {
-        log.info("Игрок начал новую игру");
-        System.out.println("Игра началась");
-        String game_word = WordFromFile();
-        int Bulls, Cows;
-        System.out.println(game_word);
-        System.out.println("Слово состоит из " + game_word.length() + " букв");
+    private static void start_game() {
+        log.info("The player started a new game");
+        System.out.println("Game on.");
+        String gameword = wordfromfile();
+        int bulls;
+        int cows;
+        System.out.println(gameword);
+        System.out.println("The word consists of " + gameword.length() + " character");
         for (int round = 1; round <= 5; round++) {
             System.out.println("\n\nРаунд " + round);
             System.out.println("Введи слово:");
             Scanner in = new Scanner(System.in);
             String num = in.nextLine();
-            Bulls = countBulls(num, game_word);
-            Cows = countCows(num, game_word);
+            bulls = countBulls(num, gameword);
+            cows = countCows(num, gameword);
 
-            System.out.println("Быков - " + Bulls);
-            System.out.println("Коров - " + Cows);
-            if (Bulls == game_word.length()) {
+            System.out.println("Быков - " + bulls);
+            System.out.println("Коров - " + cows);
+            if (bulls == gameword.length()) {
                 System.out.println("Ты выйграл! Поздравляю!!!!");
-                log.info("Игрок выйграл за " + round + "ходов");
-                EndGame();
+                log.info("Player won for " + round + "round");
+                endgame();
 
             }
 
         }
         System.out.println("Ты проиграл! Повезет в другой раз!");
-        log.info("Игрок проиграл, не угадав слово");
-        EndGame();
+        log.info("The player lost without guessing the word");
+        endgame();
     }
 
-    private static void EndGame() {
+    private static void endgame() {
         System.out.println("Если хочешь сыргать еще жми 1, если хочешь выйти - 2");
         Scanner in = new Scanner(System.in);
         int num = in.nextInt();
         switch (num) {
             case 1:
-                Game();
+                start_game();
                 break;
             case 2:
-                Exit();
+                exit_game();
+                break;
+            default:
+                exit_game();
+                break;
         }
 
 
     }
 
 
-    public static String WordFromFile() {
+    public static String wordfromfile() {
         log.info("Считано новое слово из словаря");
         List<String> words = new LinkedList<>();
         int rand = 0;
@@ -172,7 +181,7 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String s = words.get(rand);
-        return s;
+        String wordreturn = words.get(rand);
+        return wordreturn;
     }
 }
