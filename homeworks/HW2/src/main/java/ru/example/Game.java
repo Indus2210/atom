@@ -166,7 +166,7 @@ public class Game {
         List<String> words = new LinkedList<>();
         int rand = 0;
         try {
-            File file = new File("D:\\Stud\\MAGA\\2 semestr\\java\\atom\\homeworks\\HW2\\\\dictionary.txt");
+            File file = new File("dictionary.txt");
             FileReader fr = new FileReader(file);
             BufferedReader reader = new BufferedReader(fr);
             String line = reader.readLine();

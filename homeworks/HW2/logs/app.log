@@ -1,1 +1,7 @@
 2019-03-11 10:23:06.729 INFO [main] [ru.example.Game] [wordfromfile] [ru.example.Game.wordfromfile(Game.java:165)] - Считано новое слово из словаря
+2019-03-11 10:29:36.678 INFO [main] [ru.example.Game] [wordfromfile] [ru.example.Game.wordfromfile(Game.java:165)] - Считано новое слово из словаря
+2019-03-11 10:31:13.943 INFO [main] [ru.example.Game] [wordfromfile] [ru.example.Game.wordfromfile(Game.java:165)] - Считано новое слово из словаря
+2019-03-11 10:31:27.773 INFO [main] [ru.example.Game] [main] [ru.example.Game.main(Game.java:18)] - Game started
+2019-03-11 10:31:30.765 INFO [main] [ru.example.Game] [exit_game] [ru.example.Game.exit_game(Game.java:48)] - Player finished game
+2019-03-11 10:31:46.085 INFO [main] [ru.example.Game] [wordfromfile] [ru.example.Game.wordfromfile(Game.java:165)] - Считано новое слово из словаря
+2019-03-11 10:32:08.360 INFO [Test worker] [ru.example.Game] [wordfromfile] [ru.example.Game.wordfromfile(Game.java:165)] - Считано новое слово из словаря
