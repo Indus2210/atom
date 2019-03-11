@@ -25,7 +25,7 @@ public class UnitTest {
 
     @Test
     public void CheckReading() throws Exception {
-        String word = Game.WordFromFile();
+        String word = Game.wordfromfile();
         boolean flag;
         if (word instanceof String)
         {
