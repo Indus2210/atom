@@ -1,10 +1,1 @@
-2019-03-10 23:08:01.253 INFO [main] [ru.example.Game] [main] [ru.example.Game.main(Game.java:17)] - Game started
-2019-03-10 23:11:50.964 INFO [main] [ru.example.Game] [main] [ru.example.Game.main(Game.java:18)] - Игра запущена
-2019-03-10 23:11:53.652 INFO [main] [ru.example.Game] [Game] [ru.example.Game.Game(Game.java:110)] - Игрок начал новую игру
-2019-03-10 23:11:53.652 INFO [main] [ru.example.Game] [WordFromFile] [ru.example.Game.WordFromFile(Game.java:155)] - Считано новое слово из словаря
-2019-03-10 23:12:04.442 INFO [main] [ru.example.Game] [Exit] [ru.example.Game.Exit(Game.java:46)] - Игрок закончил игру
-2019-03-10 23:12:36.696 INFO [main] [ru.example.Game] [main] [ru.example.Game.main(Game.java:18)] - Игра запущена
-2019-03-10 23:12:38.353 INFO [main] [ru.example.Game] [Game] [ru.example.Game.Game(Game.java:110)] - Игрок начал новую игру
-2019-03-10 23:12:38.353 INFO [main] [ru.example.Game] [WordFromFile] [ru.example.Game.WordFromFile(Game.java:156)] - Считано новое слово из словаря
-2019-03-10 23:12:49.411 INFO [main] [ru.example.Game] [Game] [ru.example.Game.Game(Game.java:128)] - Игрок выйграл за 2ходов
-2019-03-10 23:12:51.612 INFO [main] [ru.example.Game] [Exit] [ru.example.Game.Exit(Game.java:46)] - Игрок закончил игру
+2019-03-11 10:23:06.729 INFO [main] [ru.example.Game] [wordfromfile] [ru.example.Game.wordfromfile(Game.java:165)] - Считано новое слово из словаря
