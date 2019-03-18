@@ -15,7 +15,7 @@ public class ChatClient {
     private static final String PROTOCOL = "http://";
     private static final String HOST = "localhost";
     private static final String PORT = ":8080";
-
+//первый коммит
     //POST host:port/chat/login?name=my_name
     public static Response login(String name) throws IOException {
         MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
