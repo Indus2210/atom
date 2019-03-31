@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,8 +46,9 @@ public class ChatController {
         if (usersOnline.containsKey(name)) {
             return ResponseEntity.badRequest().body("Already logged in:(");
         }
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         usersOnline.put(name, name);
-        messages.add("[" + name + "] logged in");
+        messages.add("[" + name + "] logged in " + df.format(new Date()));
         return ResponseEntity.ok().build();
     }
 
@@ -92,12 +96,13 @@ public class ChatController {
     @RequestMapping(
             path = "say",
             method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @ResponseStatus(HttpStatus.OK)
+            produces = MediaType.TEXT_PLAIN_VALUE
+    )
     public ResponseEntity say(@RequestParam("name") String name, @RequestParam("msg") String msg) {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         if (usersOnline.containsKey(name)) {
-            messages.add("(" + name + "): " + msg);
-            return ResponseEntity.ok("(" + name + "): " + msg);
+            messages.add("(" + name + " say " + df.format(new Date()) + "): " + msg);
+            return ResponseEntity.ok("(" + name  + "): " + msg);
         } else {
             return ResponseEntity.badRequest().body("User with name " + name + " is not found");
         }
