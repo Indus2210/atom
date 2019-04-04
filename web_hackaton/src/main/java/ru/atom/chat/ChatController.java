@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,8 +49,9 @@ public class ChatController {
             return ResponseEntity.badRequest().body("Already logged in:(");
         }
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
         usersOnline.put(name, name);
-        messages.add("[" + name + "] logged in " + df.format(new Date()));
+        messages.add(df.format(new Date()) + "|" + "<font color=\"#457708\"><bold>" +" ["  + name + "] Присоединился к чату " + "</bold></font>" );
         return ResponseEntity.ok().build();
     }
 
@@ -74,7 +77,8 @@ public class ChatController {
             method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity online() {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);//TODO
+        String responseBody = String.join("\n", usersOnline.keySet().stream().sorted().collect(Collectors.toList()));
+        return ResponseEntity.ok(responseBody);
     }
 
     /**
@@ -86,7 +90,14 @@ public class ChatController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity logout(@RequestParam("name") String name) {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);//TODO
+        if (usersOnline.containsKey(name)) {
+            usersOnline.remove(name);
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            messages.add(df.format(new Date())+"|"+ "<font color=\"#062e66\"><bold>" +" [" +  name + "] Покинул чат" + "</bold></font>" );
+            return ResponseEntity.ok("User " + "[" + name + "] logged out" );
+        }
+
+        return ResponseEntity.badRequest().body("User " + name + " is not exists");
     }
 
 
@@ -98,10 +109,11 @@ public class ChatController {
             method = RequestMethod.POST,
             produces = MediaType.TEXT_PLAIN_VALUE
     )
-    public ResponseEntity say(@RequestParam("name") String name, @RequestParam("msg") String msg) {
+    public ResponseEntity say(@RequestParam("name") String name, @RequestParam("msg") String msg) throws IOException {
+
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         if (usersOnline.containsKey(name)) {
-            messages.add("(" + name + " say " + df.format(new Date()) + "): " + msg);
+            messages.add("<font color=\"#870b09\"><bold>" + df.format( new Date()) + "| [" + name + "]" +  ":"+ "</bold></font>" + msg);
             return ResponseEntity.ok("(" + name  + "): " + msg);
         } else {
             return ResponseEntity.badRequest().body("User with name " + name + " is not found");

@@ -1,22 +1,36 @@
 <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>1-46M Chat</title>
 </head>
 <html>
-<body>
+<body class="bodyClass">
 <div id="header">
-    <form method="POST" id="nameform" action="javascript:void(null);" onsubmit="login()">
-        <input id="name" name="name" value="" style="font-size:medium" type="text">
-        <input value="Login" style="font-size:large" type="submit">
+    <div class="logo">
+        <img src="https://img.icons8.com/cotton/64/000000/communication.png" alt="Логотип чата">
+    </div>
+    <form method="POST" id="nameform" action="javascript:void(null);" class="formLogin">
+        <input id="name" name="name" value="" style="font-size:medium" type="text" placeholder="Логин">
+        <input value="Присоединиться" style="font-size:large" type="submit" class="buttonLogin" onclick="login()">
+        <input value="Выйти из чата" style="font-size:large" type="submit" class="buttonLogout" onclick="logout()">
     </form>
 </div>
 <div id="body">
     <div id="history" class="chat form"></div>
-</div>
-<div id="footer">
-    <form method="POST" id="msgform" action="javascript:void(null);" onsubmit="say()">
-        <input id="msg" name="msg" class="msginput" value="" style="font-size:medium" type="text">
-        <input value="Send" class="sendbutton" style="font-size:large" type="submit">
+    <form method="POST" id="workToChat" action="javascript:void(null);" class="workToChatClass">
+        <input type="submit" id="clear_id" class="clearClass" value="Очистить историю" style="font-size:large">
+        <input type="submit" id="save_id" class="saveClass" value="Сохранить историю" style="font-size:large">
     </form>
+</div>
+
+<form method="POST" id="msgform" action="javascript:void(null);" onsubmit="say()" class="formMessage">
+    <input id="msg" name="msg" class="msginput" value="" style="font-size:medium" type="text" placeholder="Сообщение">
+    <input value="Отправить" class="sendbutton" style="font-size:large" type="submit">
+</form>
+<div id="footer" class="classFooter">
+    <section class="copyright">
+        © 2019 Смирнов В.М., Шагушин А.С., Попова Ю.И.
+    </section>
 </div>
 </body>
 </html>
@@ -71,6 +85,23 @@
             console.log(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
         });
     }
+
+    function logout() {
+        var name = $('#nameform').serialize();
+        var settings = {
+            "method": "POST",
+            "crossDomain": true,
+            "url": "http://" + host + ":" + port + "/chat/logout",
+            "data": name
+        };
+        $.ajax(settings).done(function (response) {
+            loadHistory();
+        }).fail(function (jqXHR, textStatus) {
+            alert(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
+            console.log(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
+        });
+    }
+
     loadHistory();
-    setInterval(loadHistory, 10000);
+    setInterval(loadHistory, 10);
 </script>
