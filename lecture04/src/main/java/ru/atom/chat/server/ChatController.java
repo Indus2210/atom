@@ -43,6 +43,7 @@ public class ChatController {
             return ResponseEntity.badRequest().body("Already logged in:(");
         }
         usersOnline.put(name, name);
+
         messages.add("[" + name + "] logged in");
         return ResponseEntity.ok().build();
     }

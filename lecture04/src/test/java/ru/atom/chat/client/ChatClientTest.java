@@ -5,82 +5,70 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.atom.chat.client.ChatClient;
+import org.springframework.test.web.servlet.MockMvc;
 import ru.atom.chat.server.ChatApplication;
+import ru.atom.chat.server.ChatController;
 
-import java.io.IOException;
+
+import static org.hamcrest.core.StringContains.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ChatApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@AutoConfigureMockMvc
 public class ChatClientTest {
-    private static String MY_NAME_IN_CHAT = "I_AM_STUPID";
-    private static String MY_MESSAGE_TO_CHAT = "SOMEONE_KILL_ME";
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ChatController controller;
 
     @Test
-    public void login() throws IOException {
-        Response response = ChatClient.login(MY_NAME_IN_CHAT);
-        System.out.println("[" + response + "]");
-        String body = response.body().string();
-        System.out.println();
-        Assert.assertTrue(response.code() == 200 || body.equals("Already logged in:("));
+    public void login() throws Exception {
+        this.mockMvc.perform(post("/chat/login")
+                .param("name", "MyLogin")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void viewChat() throws IOException {
-        Response response = ChatClient.viewChat();
-        System.out.println("[" + response + "]");
-        System.out.println(response.body().string());
-        Assert.assertEquals(200, response.code());
-    }
-
-
-    @Test
-    public void viewOnline() throws IOException {
-        Response response1 = ChatClient.login(MY_NAME_IN_CHAT);
-        Response response = ChatClient.viewOnline();
-        System.out.println("[" + response + "]");
-        String responseBody = response.body().string();
-        System.out.println(responseBody);
-
-        Assert.assertTrue(response.code() == 200 && responseBody.equals(MY_NAME_IN_CHAT));
+    public void viewChat() throws Exception {
+        ChatClient.login("MyLogin");
+        this.mockMvc.perform(get("/chat/chat"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[MyLogin] logged in")));
+        ChatClient.logout("MyLogin");
     }
 
     @Test
-    public void say() throws IOException {
-        Response response1 = ChatClient.login(MY_NAME_IN_CHAT);
-        System.out.println("[" + response1 + "]");
-        Response response = ChatClient.say(MY_NAME_IN_CHAT, MY_MESSAGE_TO_CHAT);
-        System.out.println("[" + response + "]");
-        System.out.println(response.body().string());
-        Assert.assertEquals(200, response.code());
+    public void viewOnline() throws Exception {
+        ChatClient.login("MyLogin");
+        this.mockMvc.perform(get("/chat/online"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("MyLogin")));
+        ChatClient.logout("MyLogin");
     }
 
     @Test
-    public void logout() throws IOException {
-        Response response1 = ChatClient.login(MY_NAME_IN_CHAT);
-        System.out.println("[" + response1 + "]");
-        Response response = ChatClient.logout(MY_NAME_IN_CHAT);
-        System.out.println("[" + response + "]");
-        System.out.println(response.body().string());
-        Assert.assertEquals(200, response.code());
+    public void say() throws Exception {
+        ChatClient.login("MyLogin");
+        this.mockMvc.perform(post("/chat/say")
+                .param("name", "MyLogin")
+                .param("msg", "hello"))
+                .andExpect(status().isOk());
+        ChatClient.logout("MyLogin");
     }
 
-    @Test
-    public void deleteHistory() throws IOException {
-        Response response = ChatClient.deleteChatHistory();
-        System.out.println("[" + response + "]");
-        String responseBody = response.body().string();
-        System.out.println(responseBody);
-        Assert.assertTrue(response.code() == 200 && responseBody.equals("Messages deleted successfully!"));
-    }
 
-    @Test
-    public void getCurrentDate() throws IOException {
-        Response response = ChatClient.getCurrentDate();
-        System.out.println("[" + response + "]");
-        System.out.println(response.body().string());
-        Assert.assertEquals(200, response.code());
-    }
 }
