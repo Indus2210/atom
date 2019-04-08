@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("chat")
 public class ChatController {
     private static final Logger log = LoggerFactory.getLogger(ChatController.class);
+    private static final String HISTORY_FILE_NAME = "messages_history.txt";
 
     private Queue<String> messages = new ConcurrentLinkedQueue<>();
     private Map<String, String> usersOnline = new ConcurrentHashMap<>();
@@ -49,9 +49,11 @@ public class ChatController {
             return ResponseEntity.badRequest().body("Already logged in:(");
         }
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
         usersOnline.put(name, name);
-        messages.add(df.format(new Date()) + "|" + "<font color=\"#457708\"><bold>" +" ["  + name + "] Присоединился к чату " + "</bold></font>" );
+        String message = df.format(new Date()) + "|" + "<font color=\"#457708\"><bold>" +
+                " ["  + name + "] Присоединился к чату " + "</bold></font>";
+        messages.add(message);
+        WriteToFile(df.format(new Date()) + "|" + " ["  + name + "] Присоединился к чату ");
         return ResponseEntity.ok().build();
     }
 
@@ -93,7 +95,10 @@ public class ChatController {
         if (usersOnline.containsKey(name)) {
             usersOnline.remove(name);
             DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            messages.add(df.format(new Date())+"|"+ "<font color=\"#062e66\"><bold>" +" [" +  name + "] Покинул чат" + "</bold></font>" );
+            String message =  df.format(new Date())+"|"+ "<font color=\"#003af9\"><bold>" +
+                    " [" +  name + "] Покинул чат" + "</bold></font>";
+            messages.add(message);
+            WriteToFile(df.format(new Date())+"|"+ " [" +  name + "] Покинул чат");
             return ResponseEntity.ok("User " + "[" + name + "] logged out" );
         }
 
@@ -109,14 +114,30 @@ public class ChatController {
             method = RequestMethod.POST,
             produces = MediaType.TEXT_PLAIN_VALUE
     )
-    public ResponseEntity say(@RequestParam("name") String name, @RequestParam("msg") String msg) throws IOException {
-
+    public ResponseEntity say(@RequestParam("name") String name, @RequestParam("msg") String msg) {
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         if (usersOnline.containsKey(name)) {
-            messages.add("<font color=\"#870b09\"><bold>" + df.format( new Date()) + "| [" + name + "]" +  ":"+ "</bold></font>" + msg);
+            String message = "<bold><font color=\"#f90000\">" + df.format( new Date()) +
+                    "| [" + name + "]" +  ":"+ "</font></bold>" + msg;
+            messages.add(message);
+            WriteToFile(df.format( new Date()) +
+                    "| [" + name + "]" +  ":"+ msg);
             return ResponseEntity.ok("(" + name  + "): " + msg);
         } else {
             return ResponseEntity.badRequest().body("User with name " + name + " is not found");
         }
     }
+
+
+    private void WriteToFile(String msg) {
+        try(FileWriter fw = new FileWriter(HISTORY_FILE_NAME, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(bw))
+        {
+            out.println(msg);
+        } catch (IOException e) {
+            System.out.println("Error while writing message to file");
+        }
+    }
+
 }
